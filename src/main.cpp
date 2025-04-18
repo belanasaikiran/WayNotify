@@ -1,6 +1,7 @@
 #include "dbus_listener.hpp"
 
-int main(){
+int main() {
 
-    // 1.
+  listen_for_notifications();
+  return 0;
 }

@@ -27,3 +27,10 @@ notification-daemon/
 ├── assets/ (fonts, icons)
 └── config.json
 ```
+
+
+TODO:
+- Implement notification queueing and stacking
+- Add support for actions and buttons
+- Improve error handling and logging
+- Optimize performance and resource usage
