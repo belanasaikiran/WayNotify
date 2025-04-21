@@ -4,6 +4,8 @@ A background service that listens for desktop notifications (via D-Bus), then di
 
 Learning the notification system and I'm implementing my own notification daemon for Hyprland similar to dunst.
 
+![Screenshot](assets/Screenshot.png)
+
 
 ### Libraries
 
@@ -11,6 +13,17 @@ Learning the notification system and I'm implementing my own notification daemon
 - wlroots
 - Cairo
 - lohmann/json
+
+
+Build & Run
+
+```
+mkdir build
+cd build
+cmake ..
+make
+```
+
 
 
 Project Tree:

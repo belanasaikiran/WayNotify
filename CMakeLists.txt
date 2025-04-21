@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(hyprnotify)
+project(waynotify)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -12,10 +12,10 @@ include_directories(/usr/include/dbus-1.0 /usr/lib/x86_64-linux-gnu/dbus-1.0/inc
 
 link_directories(${DBUS_LIBRARY_DIRS})
 
-add_executable(hyprnotify
+add_executable(waynotify
     src/main.cpp
     src/dbus_listener.cpp
     src/dbus_listener.hpp
 )
 
-target_link_libraries(hyprnotify ${DBUS_LIBRARIES})
+target_link_libraries(waynotify ${DBUS_LIBRARIES})
