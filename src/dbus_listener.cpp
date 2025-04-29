@@ -1,5 +1,6 @@
 #include "dbus_listener.hpp"
 #include "dbus/dbus-shared.h"
+#include "notification_handler.hpp"
 #include <cerrno>
 #include <cstddef>
 #include <dbus/dbus.h>
@@ -74,12 +75,16 @@ DBusHandlerResult message_handler(DBusConnection *connection, DBusMessage *msg,
 
     dbus_message_iter_get_basic(&args, &expire_timeout);
 
-    std::cout << "\n[Notification]\n"
-              << "Application: " << application_icon << "\n"
-              << "Title: " << summary << "\n"
-              << "body:" << body << "\n"
-              << "TimeOut: " << expire_timeout << "ms\n"
-              << std::endl;
+    // std::cout << "\n[Notification]\n"
+    //           << "Application: " << application_icon << "\n"
+    //           << "Title: " << summary << "\n"
+    //           << "body:" << body << "\n"
+    //           << "TimeOut: " << expire_timeout << "ms\n"
+    //           << std::endl;
+
+    // Leaving it to notification handler_function
+    handle_notification(application_name, summary, body, expire_timeout);
+
 
     DBusMessage *reply = dbus_message_new_method_return(msg);
     uint32_t fake_id = 1; // to increment for each message
