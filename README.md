@@ -4,7 +4,7 @@ A background service that listens for desktop notifications (via D-Bus), then di
 
 Learning the notification system and I'm implementing my own notification daemon for Hyprland similar to dunst.
 
-![Screenshot](assets/Screenshot.png)
+![Screenshot](assets/wayNotify.png)
 
 
 ### Libraries
