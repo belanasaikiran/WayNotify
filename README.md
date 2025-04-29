@@ -1,4 +1,4 @@
-# WayNotify 🕭 [work in progress]
+# WayNotify 🕭
 
 A background service that listens for desktop notifications (via D-Bus), then displays them on-screen using Wayland protocols.
 
