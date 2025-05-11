@@ -3,12 +3,12 @@
 #include "sdl_render.hpp"
 #include <thread>
 
-void handle_notification(const std::string &app_name, const std::string &summary, const std::string &body, int timeout_ms){
+void handle_notification(const std::string &app_name, const std::string &summary, const std::string &body, const std::string &app_icon, int timeout_ms){
     // Log this somewhere - for debugging
     std::cout << "[HANDLE] " << app_name << " - " << summary << " - " << timeout_ms << "\n";
 
     std::thread([=](){
-        Notificationwindow popup(summary, body, timeout_ms);
+        Notificationwindow popup(summary, body, app_icon, timeout_ms);
         popup.show();
     }).detach();
 

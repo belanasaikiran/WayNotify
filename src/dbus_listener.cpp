@@ -75,15 +75,16 @@ DBusHandlerResult message_handler(DBusConnection *connection, DBusMessage *msg,
 
     dbus_message_iter_get_basic(&args, &expire_timeout);
 
-    // std::cout << "\n[Notification]\n"
-    //           << "Application: " << application_icon << "\n"
-    //           << "Title: " << summary << "\n"
-    //           << "body:" << body << "\n"
-    //           << "TimeOut: " << expire_timeout << "ms\n"
-    //           << std::endl;
+    std::cout << "\n[Notification]\n"
+              << "Application: " << application_name << "\n"
+              << "Title: " << summary << "\n"
+              << "body:" << body << "\n"
+              << "App ICON: " << application_icon << "\n"
+              << "TimeOut: " << expire_timeout << "ms\n"
+              << std::endl;
 
     // Leaving it to notification handler_function
-    handle_notification(application_name, summary, body, expire_timeout);
+    handle_notification(application_name, summary, body, application_icon, expire_timeout);
 
 
     DBusMessage *reply = dbus_message_new_method_return(msg);
