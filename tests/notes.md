@@ -17,3 +17,9 @@ systemctl --user stop swaync.service
 systemctl --user disable swaync.service
 systemctl --user mask swaync.service
 ```
+
+
+
+### Tests
+
+To test the app, run `notify-send "HELLO" -t 3000` in bash and see if you receive any notification.
