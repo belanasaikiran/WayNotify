@@ -75,9 +75,25 @@ void Notificationwindow::show(){
     int icon_width, icon_height;
     SDL_QueryTexture(icon_texture, nullptr, nullptr, &icon_width, &icon_height);
 
+    // Scale the Image ICon
+    int max_width = 48;
+    int max_height = 48;
+
+    float aspect_ratio = static_cast<float>(icon_width) / static_cast<float>(icon_height);
+
+    if(icon_width > max_width) {
+        icon_width = max_width;
+        icon_height = static_cast<int> (max_width / aspect_ratio);
+    }
+    if(icon_height > max_height){
+        icon_height = max_height;
+        icon_width = static_cast<int>(max_height * aspect_ratio);
+    }
+
+
+
     // current position - top left
     SDL_Rect icon_rect = {10, 10, icon_width, icon_height};
-    SDL_RenderCopy(renderer, icon_texture, nullptr, &icon_rect);
 
     // Colors in RGBA
     SDL_Color white = {255, 255, 255, 255};
@@ -100,14 +116,20 @@ void Notificationwindow::show(){
     SDL_QueryTexture(title_tex, nullptr, nullptr, &tw, &th);
     SDL_QueryTexture(body_tex, nullptr, nullptr, &bw, &bh);
 
-    SDL_Rect title_rect = {10, 10, tw, th};
-    SDL_Rect body_rect = {10, 30, bw, bh};
+    // Set text positions relative to the icon
+    int icon_x = icon_rect.x + icon_rect.w + 10;
+    int title_y = 10;
+    int body_y = 30;
 
+    // Set the title and body text positions
+    SDL_Rect title_rect = {icon_x, title_y, tw, th};
+    SDL_Rect body_rect = {icon_x, body_y, bw, bh};
+
+    SDL_RenderCopy(renderer, icon_texture, nullptr, &icon_rect);
     SDL_RenderCopy(renderer, title_tex, nullptr, &title_rect);
     SDL_RenderCopy(renderer,body_tex, nullptr,&body_rect);
 
-    // Display on to
-    // screen
+    // Display on to screen
     SDL_RenderPresent(renderer);
     // Wait for some time before quitting
     SDL_Delay(40000);  // Display for 2 seconds
@@ -118,10 +140,9 @@ void Notificationwindow::show(){
     std::cout << "Done Loaded " << std:: endl;
 
     // Clean Up
-
+    SDL_DestroyTexture(icon_texture);
     SDL_DestroyTexture(title_tex);
     SDL_DestroyTexture(body_tex);
-    SDL_DestroyTexture(icon_texture);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
 }
