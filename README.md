@@ -11,7 +11,7 @@ Learning the notification system and I'm implementing my own notification daemon
 
 - dbus
 - wlroots
-- Cairo
+- SDL2
 - lohmann/json
 
 
