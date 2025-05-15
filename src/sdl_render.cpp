@@ -1,15 +1,7 @@
 #include "sdl_render.hpp"
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_error.h>
-#include <SDL2/SDL_pixels.h>
-#include <SDL2/SDL_render.h>
-#include <SDL2/SDL_surface.h>
 #include <SDL2/SDL_ttf.h>
-#include <SDL2/SDL_video.h>
-#include <SDL2/SDL_image.h>
 #include <chrono>
 #include <thread>
-#include <iostream>
 
 Notificationwindow::Notificationwindow(const std::string &title,
                                        const std::string &body, const std::string& icon, int timeout_ms)
@@ -99,9 +91,14 @@ void Notificationwindow::show(){
     SDL_Color white = {255, 255, 255, 255};
     SDL_Color black = {0, 0, 0, 255};
 
-    SDL_Surface* title_surf = TTF_RenderText_Blended(font, title_.c_str(), white);
-    SDL_Surface* body_surf = TTF_RenderText_Blended(font, body_.c_str(), white);
+    int text_wrap_width = 280;
+
+    // Title
+    SDL_Surface* title_surf = TTF_RenderText_Blended_Wrapped(font, title_.c_str(), white, text_wrap_width);
     SDL_Texture* title_tex = SDL_CreateTextureFromSurface(renderer, title_surf);
+
+    // Body
+    SDL_Surface* body_surf = TTF_RenderText_Blended_Wrapped(font, body_.c_str(), white, text_wrap_width);
     SDL_Texture* body_tex = SDL_CreateTextureFromSurface(renderer, body_surf);
 
 
