@@ -1,5 +1,11 @@
 #include "sdl_render.hpp"
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_events.h>
+#include <SDL2/SDL_mouse.h>
+#include <SDL2/SDL_rect.h>
+#include <SDL2/SDL_render.h>
 #include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_video.h>
 #include <chrono>
 #include <thread>
 
@@ -31,6 +37,8 @@ void Notificationwindow::show(){
         std::cerr << "SDL_CreateWindow Error: " << SDL_GetError() << std::endl;
         return;
     }
+    SDL_SetWindowInputFocus(window);
+
 
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
@@ -93,6 +101,18 @@ void Notificationwindow::show(){
 
     int text_wrap_width = 280;
 
+
+
+    // Dismiss Button and place it at top right corner
+    int button_width = 30, button_height = 30;
+    SDL_Rect button_rect = {300 - button_width - 10, 10, button_width, button_height};
+    SDL_Color button_color = {120, 20, 120, 255};
+
+    SDL_SetRenderDrawColor(renderer, button_color.r, button_color.g, button_color.b, button_color.a);
+    SDL_RenderFillRect(renderer, &button_rect);
+
+
+
     // Title
     SDL_Surface* title_surf = TTF_RenderText_Blended_Wrapped(font, title_.c_str(), white, text_wrap_width);
     SDL_Texture* title_tex = SDL_CreateTextureFromSurface(renderer, title_surf);
@@ -106,7 +126,7 @@ void Notificationwindow::show(){
     SDL_FreeSurface(body_surf);
 
     // Set Background
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    SDL_SetRenderDrawColor(renderer, 10, 10, 70, 255);
     SDL_RenderClear(renderer);
 
     int tw, th, bw, bh; // title and body width and height
@@ -122,12 +142,52 @@ void Notificationwindow::show(){
     SDL_Rect title_rect = {icon_x, title_y, tw, th};
     SDL_Rect body_rect = {icon_x, body_y, bw, bh};
 
+    // Now draw the button (after clearing the screen)
+    SDL_SetRenderDrawColor(renderer, button_color.r, button_color.g, button_color.b, button_color.a);
+    SDL_RenderFillRect(renderer, &button_rect);
+
     SDL_RenderCopy(renderer, icon_texture, nullptr, &icon_rect);
     SDL_RenderCopy(renderer, title_tex, nullptr, &title_rect);
     SDL_RenderCopy(renderer,body_tex, nullptr,&body_rect);
-
     // Display on to screen
     SDL_RenderPresent(renderer);
+
+    SDL_Event e;
+    while(SDL_PollEvent(&e)){
+        std::cout << "Event Type: " << e.type << std::endl;
+
+        std::cout << "QUIT: " << SDL_QUIT << std::endl;
+        std::cout << "Mouse Down: " << SDL_MOUSEBUTTONDOWN << std::endl;
+        if(e.type == SDL_QUIT) return;
+
+        int a, b;
+        SDL_GetMouseState(&a, &b);
+        std::cout << "Mouse click at: " << a << ", " << b << std::endl;
+
+
+        // Check for mouse click on dismiss button
+        if(e.type == SDL_MOUSEBUTTONDOWN){
+            int x, y;
+            SDL_GetMouseState(&x, &y);
+            std::cout << "Mouse click at: " << x << ", " << y << std::endl;
+
+            // check if click is inside the button rectangle
+            if(x >= button_rect.x && x  <= button_rect.x + button_rect.w &&
+                y >= button_rect.y && y <= button_rect.y + button_rect.h){
+                    std::cout << "Dismiss button clicked!" << std::endl;
+
+                    // Dismiss the notification
+                    SDL_DestroyTexture(icon_texture);
+                    SDL_DestroyTexture(title_tex);
+                    SDL_DestroyTexture(body_tex);
+                    SDL_DestroyRenderer(renderer);
+                    SDL_DestroyWindow(window);
+                }
+        }
+    }
+
+
+
     // Wait for some time before quitting
     SDL_Delay(40000);  // Display for 2 seconds
 
