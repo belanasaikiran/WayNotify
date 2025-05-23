@@ -152,49 +152,38 @@ void Notificationwindow::show(){
     // Display on to screen
     SDL_RenderPresent(renderer);
 
-    SDL_Event e;
-    while(SDL_PollEvent(&e)){
-        std::cout << "Event Type: " << e.type << std::endl;
+     // Persistent event loop
+    bool running = true;
+    Uint32 start_time = SDL_GetTicks();
+    while (running) {
+        SDL_Event e;
+        while (SDL_PollEvent(&e)) {
+            if (e.type == SDL_QUIT) {
+                running = false;
+            }
+            if (e.type == SDL_MOUSEBUTTONDOWN) {
+                int x = e.button.x;
+                int y = e.button.y;
 
-        std::cout << "QUIT: " << SDL_QUIT << std::endl;
-        std::cout << "Mouse Down: " << SDL_MOUSEBUTTONDOWN << std::endl;
-        if(e.type == SDL_QUIT) return;
-
-        int a, b;
-        SDL_GetMouseState(&a, &b);
-        std::cout << "Mouse click at: " << a << ", " << b << std::endl;
-
-
-        // Check for mouse click on dismiss button
-        if(e.type == SDL_MOUSEBUTTONDOWN){
-            int x, y;
-            SDL_GetMouseState(&x, &y);
-            std::cout << "Mouse click at: " << x << ", " << y << std::endl;
-
-            // check if click is inside the button rectangle
-            if(x >= button_rect.x && x  <= button_rect.x + button_rect.w &&
-                y >= button_rect.y && y <= button_rect.y + button_rect.h){
-                    std::cout << "Dismiss button clicked!" << std::endl;
-
-                    // Dismiss the notification
-                    SDL_DestroyTexture(icon_texture);
-                    SDL_DestroyTexture(title_tex);
-                    SDL_DestroyTexture(body_tex);
-                    SDL_DestroyRenderer(renderer);
-                    SDL_DestroyWindow(window);
+                // check if click is inside the button rectangle
+                if(x >= button_rect.x && x  <= button_rect.x + button_rect.w &&
+                    y >= button_rect.y && y <= button_rect.y + button_rect.h){
+                        running = false;
                 }
+            }
         }
+        // Check for timeout
+        if (SDL_GetTicks() - start_time > static_cast<Uint32>(timeout_ms_)) {
+            running = false;
+        }
+        // SDL_Delay(10); // Small delay to avoid busy loop
     }
 
 
-
-    // Wait for some time before quitting
-    SDL_Delay(40000);  // Display for 2 seconds
-
-    SDL_Delay(timeout_ms_);
+    // SDL_Delay(timeout_ms_);
     // std::this_thread::sleep_for(std::chrono::milliseconds(timeout_ms_));
 
-    std::cout << "Done Loaded " << std:: endl;
+    std::cout << "Destroyed " << std:: endl;
 
     // Clean Up
     SDL_DestroyTexture(icon_texture);

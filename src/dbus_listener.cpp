@@ -75,6 +75,8 @@ DBusHandlerResult message_handler(DBusConnection *connection, DBusMessage *msg,
 
     dbus_message_iter_get_basic(&args, &expire_timeout);
 
+    if(expire_timeout < 1000) expire_timeout = 4000;
+
     std::cout << "\n[Notification]\n"
               << "Application: " << application_name << "\n"
               << "Title: " << summary << "\n"
